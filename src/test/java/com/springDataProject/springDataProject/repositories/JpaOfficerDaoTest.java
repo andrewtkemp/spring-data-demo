@@ -1,6 +1,7 @@
-package com.springDataProject.springDataProject.entities;
+package com.springDataProject.springDataProject.repositories;
 
-import com.springDataProject.springDataProject.repositories.JdbcOfficerDao;
+import com.springDataProject.springDataProject.entities.Officer;
+import com.springDataProject.springDataProject.entities.Rank;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,33 +12,33 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class JdbcOfficerDaoTest {
+class JpaOfficerDaoTest {
 
     @Autowired
-    JdbcOfficerDao jdbcOfficerDao;
+    JpaOfficerDao jpaOfficerDao;
 
     @Test
     void countOfficers() {
-        Long count = jdbcOfficerDao.count();
+        Long count = jpaOfficerDao.count();
 
         assertTrue(count > 0);
     }
 
     @Test
     void findAllOfficers() {
-        List<Officer> officers = jdbcOfficerDao.findAll();
+        List<Officer> officers = jpaOfficerDao.findAll();
         assertFalse(officers.isEmpty());
         officers.forEach(System.out::println);
     }
 
     @Test
     void officerExistsById() {
-        assertTrue(jdbcOfficerDao.existsById(2));
+        assertTrue(jpaOfficerDao.existsById(2L));
     }
 
     @Test
     void findOfficerById() {
-        Optional<Officer> officer = jdbcOfficerDao.findById(3);
+        Optional<Officer> officer = jpaOfficerDao.findById(3L);
         assertTrue(officer.isPresent());
         System.out.println(officer);
     }
@@ -45,15 +46,16 @@ class JdbcOfficerDaoTest {
     @Test
     void createNewOfficer() {
         Officer officer = new Officer(Rank.LIEUTENANT, "Nyota", "Uhuru");
-        jdbcOfficerDao.save(officer);
+        jpaOfficerDao.save(officer);
         assertNotNull(officer.getId());
         System.out.println(officer);
     }
 
     @Test
     void deleteOfficer() {
-        Optional<Officer> officer = jdbcOfficerDao.findById(1);
-        jdbcOfficerDao.delete(officer.get());
-        assertFalse(jdbcOfficerDao.existsById(1));
+        Optional<Officer> officer = jpaOfficerDao.findById(1L);
+        jpaOfficerDao.delete(officer.get());
+        assertFalse(jpaOfficerDao.existsById(1L));
     }
+
 }
