@@ -84,9 +84,4 @@ public class Officer {
                 getFirst().equals(officer.getFirst()) &&
                 getLast().equals(officer.getLast());
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getRank(), getFirst(), getLast());
-    }
 }
