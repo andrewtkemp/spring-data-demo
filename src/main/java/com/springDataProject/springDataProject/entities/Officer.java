@@ -1,11 +1,20 @@
 package com.springDataProject.springDataProject.entities;
 
-import java.util.Objects;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "officers")
 public class Officer {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column(name = "officer_rank")
+    @Enumerated(EnumType.STRING)
     private Rank rank;
+    @Column(name = "first_name")
     private String first;
+    @Column(name = "last_name")
     private String last;
 
     public Officer(){}
