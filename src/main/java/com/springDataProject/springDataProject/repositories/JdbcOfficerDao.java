@@ -70,10 +70,4 @@ public class JdbcOfficerDao {
 
         return officer;
     }
-    public void update(Long id) {
-        jdbcTemplate.update("update from officers set officer_rank = ? where id = ?", Rank.CAPTAIN, id);
-    }
-    public void delete(Long id) {
-        jdbcTemplate.update("delete from officers where id = ?", id);
-    }
 }

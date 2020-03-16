@@ -11,29 +11,61 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
 public class OfficerController {
-        @Autowired
-        JpaOfficerDao jpaOfficerDao;
-        @PostMapping("/officer")
-        public Officer createOfficer(@RequestBody Officer officer) {
-            return jpaOfficerDao.save(officer);
-        }
-        @GetMapping("/officer")
-        public List<Officer> getOfficer(){
-            return jpaOfficerDao.findAll();
-        }
-        @GetMapping("/officer/{id}")
-        public Optional<Officer> getOfficerById(@PathVariable Long id){
-            return  jpaOfficerDao.findById(id);
-        }
-        @PatchMapping("/officer/{id}")
-        public Optional<Officer> updateOfficer(@PathVariable Long id){
-            return jpaOfficerDao.update(id);
-        }
-        @DeleteMapping("/officer/{id}")
-        public void deletePerson(@PathVariable Long id){
-            jpaOfficerDao.delete(id);
-        }
 
+
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+    JdbcOfficerDao jdbcOfficerDao;
+    JpaOfficerDao jpaOfficerDao;
+
+
+    public OfficerController(JdbcTemplate jdbcTemplate, JpaOfficerDao jpaOfficerDao){
+        jdbcOfficerDao = new JdbcOfficerDao(jdbcTemplate);
+        this.jpaOfficerDao = jpaOfficerDao;
     }
+
+
+    //CREATE
+
+
+    @PostMapping("/officers")
+    public Officer JDBCPostOfficer(@RequestBody Officer officer){
+        return jdbcOfficerDao.save(officer);
+    }
+
+
+    //READ
+
+
+    @GetMapping("/officers")
+    public List<Officer> JDBCGetAllOfficers() {
+        List<Officer> officerList = jdbcOfficerDao.findAllOfficers();
+        return officerList;
+    }
+
+    @GetMapping("/officers/{id}")
+    public Optional<Object> JDBCGetOfficerByID(@PathVariable Long id){
+        Optional<Object> officer = jdbcOfficerDao.findOfficerById(id);
+        return officer;
+    }
+
+
+    //UPDATE
+
+
+    @PatchMapping("/officers/{id}/{rank}")
+    public Officer JPAPatchOfficerRank(@PathVariable Long id, @PathVariable Rank rank){
+        return jpaOfficerDao.updateRankByID(id, rank);
+    }
+
+
+    // DELETE
+
+
+    @DeleteMapping("/officers/{id}")
+    public void JBDCDeleteOfficerByID( @PathVariable Long id){
+        jdbcOfficerDao.delete(id);
+    }
+
+}
