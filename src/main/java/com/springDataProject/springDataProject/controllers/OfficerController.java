@@ -1,6 +1,7 @@
 package com.springDataProject.springDataProject.controllers;
 
 import com.springDataProject.springDataProject.entities.Officer;
+import com.springDataProject.springDataProject.entities.Rank;
 import com.springDataProject.springDataProject.repositories.JpaOfficerDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ public class OfficerController {
         @Autowired
         JpaOfficerDao jpaOfficerDao;
         @PostMapping("/officer")
-        public Officer createOfficer(@RequestBody Officer officer){
+        public Officer createOfficer(@RequestBody Officer officer) {
             return jpaOfficerDao.save(officer);
         }
         @GetMapping("/officer")
@@ -27,19 +28,12 @@ public class OfficerController {
             return  jpaOfficerDao.findById(id);
         }
         @PatchMapping("/officer/{id}")
-        public Optional<Officer> updateOfficerRank(@RequestParam String email, @PathVariable Long id){
-            return personRepository.updateEmail(id, email);
+        public Optional<Officer> updateOfficer(@PathVariable Long id){
+            return jpaOfficerDao.update(id);
         }
         @DeleteMapping("/officer/{id}")
-        public ResponseEntity deletePerson(@PathVariable Long id){
-            boolean deleted = personRepository.delete(id);
-            if(!deleted){
-                return ResponseEntity.notFound()
-                        .header("errorMsg", "Person id "+id+" doesn't exist")
-                        .build();
-            }else{
-                return ResponseEntity.ok().build();
-            }
+        public void deletePerson(@PathVariable Long id){
+            jpaOfficerDao.delete(id);
         }
 
     }

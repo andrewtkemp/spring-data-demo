@@ -49,7 +49,7 @@ public class JdbcOfficerDao {
         return found;
     }
 
-    public Optional<Officer> findById(int id) {
+    public Optional<Officer> findById(Long id) {
         if(!existsById(id)) return Optional.empty();
         return Optional.ofNullable(jdbcTemplate.queryForObject("select * from officers where id=?",
                 ((rs, rowNum) -> new Officer(rs.getLong("id"),
@@ -70,8 +70,10 @@ public class JdbcOfficerDao {
 
         return officer;
     }
-
-    public void delete(Officer officer) {
-        jdbcTemplate.update("delete from officers where id = ?", officer.getId());
+    public void update(Long id) {
+        jdbcTemplate.update("update from officers set officer_rank = ? where id = ?", Rank.CAPTAIN, id);
+    }
+    public void delete(Long id) {
+        jdbcTemplate.update("delete from officers where id = ?", id);
     }
 }

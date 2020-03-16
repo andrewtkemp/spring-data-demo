@@ -34,12 +34,12 @@ class JdbcOfficerDaoTest {
 
     @Test
     void officerExistsById() {
-        assertTrue(jdbcOfficerDao.existsById(2));
+        assertTrue(jdbcOfficerDao.existsById(2L));
     }
 
     @Test
     void findOfficerById() {
-        Optional<Officer> officer = jdbcOfficerDao.findById(3);
+        Optional<Officer> officer = jdbcOfficerDao.findById(3L);
         assertTrue(officer.isPresent());
         System.out.println(officer);
     }
@@ -53,9 +53,8 @@ class JdbcOfficerDaoTest {
     }
 
     @Test
-    void deleteOfficer() {
-        Optional<Officer> officer = jdbcOfficerDao.findById(1);
-        jdbcOfficerDao.delete(officer.get());
-        assertFalse(jdbcOfficerDao.existsById(1));
+    void deleteOfficer(Long id) {
+        jdbcOfficerDao.delete(id);
+        assertFalse(jdbcOfficerDao.existsById(id));
     }
 }
