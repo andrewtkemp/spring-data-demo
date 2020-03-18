@@ -51,11 +51,13 @@ class JpaOfficerDaoTest {
         System.out.println(officer);
     }
 
-    @Test
-    void deleteOfficer() {
-        Optional<Officer> officer = jpaOfficerDao.findById(1L);
-        jpaOfficerDao.delete(officer.get());
-        assertFalse(jpaOfficerDao.existsById(1L));
-    }
+//    @Test
+//    void deleteOfficer() {
+//        Officer officer = new Officer(Rank.LIEUTENANT, "Nyota", "Uhuru");
+//        jpaOfficerDao.save(officer);
+//        Optional<Officer> officerToDelete = jpaOfficerDao.findById(1L);
+//        jpaOfficerDao.delete(officerToDelete.get());
+//        assertFalse(jpaOfficerDao.existsById(1L));
+//    }
 
 }

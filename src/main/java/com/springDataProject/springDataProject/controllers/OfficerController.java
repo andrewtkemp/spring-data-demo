@@ -17,7 +17,7 @@ public class OfficerController {
         this.jpaOfficerDao = jpaOfficerDao;
     }
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public Officer saveOfficer(@RequestBody Officer officer){
         return jpaOfficerDao.save(officer);
     }
@@ -31,7 +31,7 @@ public class OfficerController {
         Optional<Officer> officer = jpaOfficerDao.findById(id);
         return officer;
     }
-    @PutMapping("{id}")
+    @PutMapping("{id}/{rank}")
     public Officer updateOfficer(@PathVariable Long id, @PathVariable Rank rank){
         // Find Officer
         Optional<Officer> officerToUpdate = jpaOfficerDao.findById(id);
