@@ -2,7 +2,6 @@ package com.springDataProject.springDataProject.repositories;
 
 import com.springDataProject.springDataProject.entities.Officer;
 import com.springDataProject.springDataProject.entities.Rank;
-import com.springDataProject.springDataProject.repositories.JdbcOfficerDao;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +20,6 @@ class JdbcOfficerDaoTest {
     @Test
     void countOfficers() {
         Long count = jdbcOfficerDao.count();
-
         assertTrue(count > 0);
     }
 
@@ -30,11 +28,6 @@ class JdbcOfficerDaoTest {
         List<Officer> officers = jdbcOfficerDao.findAll();
         assertFalse(officers.isEmpty());
         officers.forEach(System.out::println);
-    }
-
-    @Test
-    void officerExistsById() {
-        assertTrue(jdbcOfficerDao.existsById(2L));
     }
 
     @Test
@@ -51,10 +44,12 @@ class JdbcOfficerDaoTest {
         assertNotNull(officer.getId());
         System.out.println(officer);
     }
-
     @Test
-    void deleteOfficer(Long id) {
-        jdbcOfficerDao.delete(id);
-        assertFalse(jdbcOfficerDao.existsById(id));
+    void deleteOfficer() {
+        Officer officer = new Officer(Rank.LIEUTENANT, "Nyota", "Uhuru");
+        jdbcOfficerDao.save(officer);
+        assertEquals(jdbcOfficerDao.delete(officer.getId()), true);
+        assertEquals(jdbcOfficerDao.delete(2L), true);
     }
+
 }

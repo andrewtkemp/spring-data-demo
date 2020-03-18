@@ -3,69 +3,52 @@ package com.springDataProject.springDataProject.controllers;
 import com.springDataProject.springDataProject.entities.Officer;
 import com.springDataProject.springDataProject.entities.Rank;
 import com.springDataProject.springDataProject.repositories.JpaOfficerDao;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/api/officers")
 public class OfficerController {
-
-
-    @Autowired
-    JdbcTemplate jdbcTemplate;
-    JdbcOfficerDao jdbcOfficerDao;
-    JpaOfficerDao jpaOfficerDao;
-
-
-    public OfficerController(JdbcTemplate jdbcTemplate, JpaOfficerDao jpaOfficerDao){
-        jdbcOfficerDao = new JdbcOfficerDao(jdbcTemplate);
+    private JpaOfficerDao jpaOfficerDao;
+    public OfficerController(JpaOfficerDao jpaOfficerDao){
         this.jpaOfficerDao = jpaOfficerDao;
     }
-
-
-    //CREATE
-
-
-    @PostMapping("/officers")
-    public Officer JDBCPostOfficer(@RequestBody Officer officer){
-        return jdbcOfficerDao.save(officer);
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Officer saveOfficer(@RequestBody Officer officer){
+        return jpaOfficerDao.save(officer);
     }
-
-
-    //READ
-
-
-    @GetMapping("/officers")
-    public List<Officer> JDBCGetAllOfficers() {
-        List<Officer> officerList = jdbcOfficerDao.findAllOfficers();
+    @GetMapping
+    public List<Officer> getAllOfficers() {
+        List<Officer> officerList = jpaOfficerDao.findAll();
         return officerList;
     }
-
-    @GetMapping("/officers/{id}")
-    public Optional<Object> JDBCGetOfficerByID(@PathVariable Long id){
-        Optional<Object> officer = jdbcOfficerDao.findOfficerById(id);
+    @GetMapping("{id}")
+    public Optional<Officer> getOfficerById(@PathVariable Long id){
+        Optional<Officer> officer = jpaOfficerDao.findById(id);
         return officer;
     }
-
-
-    //UPDATE
-
-
-    @PatchMapping("/officers/{id}/{rank}")
-    public Officer JPAPatchOfficerRank(@PathVariable Long id, @PathVariable Rank rank){
-        return jpaOfficerDao.updateRankByID(id, rank);
+    @PutMapping("{id}")
+    public Officer updateOfficer(@PathVariable Long id, @PathVariable Rank rank){
+        // Find Officer
+        Optional<Officer> officerToUpdate = jpaOfficerDao.findById(id);
+        // Get officer to update
+        Officer officer = officerToUpdate.get();
+        // Rank setter
+        officer.setRank(rank);
+        // return saved officer query
+        return jpaOfficerDao.save(officer);
     }
-
-
-    // DELETE
-
-
-    @DeleteMapping("/officers/{id}")
-    public void JBDCDeleteOfficerByID( @PathVariable Long id){
-        jdbcOfficerDao.delete(id);
+    @DeleteMapping("{id}")
+    public void deleteOfficer( @PathVariable Long id){
+       jpaOfficerDao.deleteById(id);
     }
 
 }
+
+
+
+

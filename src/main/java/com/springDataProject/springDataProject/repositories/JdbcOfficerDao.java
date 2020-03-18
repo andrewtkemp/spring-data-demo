@@ -2,7 +2,6 @@ package com.springDataProject.springDataProject.repositories;
 
 import com.springDataProject.springDataProject.entities.Officer;
 import com.springDataProject.springDataProject.entities.Rank;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -26,11 +25,13 @@ public class JdbcOfficerDao {
     }
 
     public Long count() {
-        return jdbcTemplate.queryForObject("select count(*) from officers", Long.class);
+        String countQuery = "select count(*) from officers";
+        return jdbcTemplate.queryForObject(countQuery, Long.class);
     }
 
     public List<Officer> findAll() {
-        return jdbcTemplate.query("select * from officers",
+        String selectAllQuery = "select * from officers";
+        return jdbcTemplate.query(selectAllQuery,
                 (rs, rowNum) -> new Officer(rs.getLong("id"),
                         Rank.valueOf(rs.getString("officer_rank")),
                         rs.getString("first_name"),
@@ -38,20 +39,9 @@ public class JdbcOfficerDao {
         );
     }
 
-    public boolean existsById(long id) {
-        boolean found = false;
-        try {
-            found = jdbcTemplate.queryForObject(
-                    "select 1 from officers where id = ?", Boolean.class, id);
-        }catch (EmptyResultDataAccessException e){
-            //ignore
-        }
-        return found;
-    }
-
     public Optional<Officer> findById(Long id) {
-        if(!existsById(id)) return Optional.empty();
-        return Optional.ofNullable(jdbcTemplate.queryForObject("select * from officers where id=?",
+        String findByIdQuery = "select * from officers where id=?";
+        return Optional.ofNullable(jdbcTemplate.queryForObject(findByIdQuery,
                 ((rs, rowNum) -> new Officer(rs.getLong("id"),
                         Rank.valueOf(rs.getString("officer_rank")),
                         rs.getString("first_name"),
@@ -69,5 +59,12 @@ public class JdbcOfficerDao {
         officer.setId(newId);
 
         return officer;
+    }
+    // found here https://stackoverflow.com/questions/18259906/spring-jdbctemplate-delete-syntax
+    public boolean delete(Long id){
+        String deleteQuery = "DELETE FROM officers WHERE id = ?";
+        Object[] args = new Object[] {id};
+
+        return jdbcTemplate.update(deleteQuery, args) == 1;
     }
 }
